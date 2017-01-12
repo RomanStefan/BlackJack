@@ -126,6 +126,35 @@ void afiseaza_pachet() {
 	}
 }
 
+int aceiasi_carte(Carte a, Carte b) {
+	if (strcmp(a.nume, b.nume) == 0) return 1;
+	else return 0;
+}
+void cartea21 (Mana &p) {
+	do{
+		p.carte[p.dimensiune] = pachet.carte[--pachet.total];
+	}while(1);
+
+	if (p.carte[p.dimensiune].valoare == 12)
+        p.carte[p.dimensiune].valoare = 10;
+
+	p.dimensiune++;
+}
+void numara21 (Mana &p) {
+	unsigned short int i;
+
+	p.puncte += p.carte[p.dimensiune - 1].valoare;
+
+	if (p.puncte > 21) {
+		for (i = 0; i < p.dimensiune; i++) {
+			if (p.carte[i].valoare == 11) {
+				p.carte[i].valoare = 1;
+				p.puncte -= 10;
+			}
+		}
+	}
+}
+
 
 int main()
 {
