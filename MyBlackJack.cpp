@@ -218,7 +218,16 @@ void editeazaJucator(int i)
 
 }
 
-void ZaGame(bool vsComputer, int p1, int p2 = -1) {
+void afiseaza_despre_jucator(int i)
+{
+    cout<<"\n\nNume: "<<player[i].nume;
+    cout<<"\nSuma de bani: "<<player[i].bani;
+    cout<<"\nJocuri castigate: "<<player[i].jocuri_castigate;
+    cout<<"\nJocuri pierdute: "<<player[i].jocuri_pierdute;
+}
+
+
+void StartBlackjack(bool vsComputer, int p1, int p2 = -1) {
 	Mana jucator, dealer;
 	Carte splitcard;
 	int i, j, splitchk = 0, ture;
@@ -317,25 +326,154 @@ void ZaGame(bool vsComputer, int p1, int p2 = -1) {
 
 					ture = 1;
 				}
-                else if (c == '5') {
+				else if (c == '2')
+                {
+                    for (i = 0; i < jucator.dimensiune; i++)
+                    {
+                        cout<<"# "<<jucator.carte[i].nume<<" #\n";
+                    }
+
+                    amestecaPachet();
+
+                    if (splitchk == 1)
+                    {
+                        cout<<"# "<<splitcard.nume<<" #";
+                    }
+                }
+                else if (c == '3')
+                {
+                    if ((ture == 0)
+                    && ((jucator.carte[0].valoare == jucator.carte[1].valoare)
+                    || ((jucator.carte[0].valoare == 1) && (jucator.carte[1].valoare == 11))
+                    || ((jucator.carte[0].valoare == 11) && (jucator.carte[1].valoare == 1)))
+                    && (splitchk == 0))
+                    {
+                        splitcard = jucator.carte[--jucator.dimensiune];
+                        cout<<"\nAi decis sa-ti salvezi "<<jucator.carte[jucator.dimensiune].nume;
+
+                        jucator.puncte -= jucator.carte[jucator.dimensiune].valoare;
+
+                        cartea21(jucator);
+                        numara21(jucator);
+
+                        cout<<"\nAi primit "<<jucator.carte[jucator.dimensiune - 1].uno<<' '<<jucator.carte[jucator.dimensiune - 1].nume;
+
+                        splitchk = 1;
+                    }
+                    else cout<<"\nNu poti face split.";
+                }
+                else if (c == '4')
+                {
+                    cout<<"\n"<<player[p1].nume<<": \n";
+                    for (i = 0; i < jucator.dimensiune; i++)
+                    {
+                        cout<<"# "<<jucator.carte[i].nume<<" #\n";
+                    }
+
+                    cout<<"\n\nDealer: \n";
+                    for (i = 0; i < dealer.dimensiune; i++)
+                    {
+                        cout<<"# "<<dealer.carte[i].nume<<" #\n";
+                    }
+                    cout<<"\n";
+
+                    if (dealer.blackjack == 1)
+                        break;
+
+                    ture = 1;
+
+                    while ((dealer.puncte <= 16) && (dealer.puncte <= jucator.puncte) && (jucator.puncte != 21))
+                    {
+                        cartea21(dealer);
+                        numara21(dealer);
+
+                        cout<<"\nDealerul a primit "<<dealer.carte[dealer.dimensiune - 1].uno<<' '<<dealer.carte[dealer.dimensiune - 1].nume<<'\n';
+
+                    }
+
+                    if (dealer.puncte > 21)
+                    {
+                        cout<<"Dealerul a pierdut!!";
+                    }
+                    else if (jucator.puncte != 21)
+                    {
+                        cout<<"\n\nDealerul ramane cu "<<dealer.puncte<<" puncte";
+                    }
+
+                    break;
+                }
+                else if (c == '5')
+                {
+                    jucator.blackjack = 2;
+                    cout<<player[p1].nume<<" crede ca dealerul are blackjack.";
+
+                    break;
+                }
+                else if (c == '6') {
+                    jucator.blackjack = 15;
                     break;
                 }
                 else cout<<"Comanda necunoscuta\n";
             } while(1);
+		}
+//5 comit/
+		if (jucator.blackjack == 1) {
+			cout<<player[p1].nume<<" are blackjack!";
+		}
+
+		if (jucator.blackjack == 15)
+            break;
+		else if (jucator.blackjack == 2)
+		{
+            if (dealer.puncte == 21) {
+                cout<<"Ai dreptate !";
+            }
+            else cout<<" Nu ai dreptate >.< !";
+        }
+        else
+        {
+            if (((jucator.puncte >= dealer.puncte) && (jucator.puncte <= 21)) || (dealer.puncte > 21))
+            {
+                cout<<"\n\nAi castigaaat !";
+                player[p1].bani += pariu * 3 / 2;
+            }
+            else
+                cout<<"\n\nAi pierdut >.< !";
         }
 
+		cout<<"\n\n"<<player[p1].nume<<":";
+		for (i = 0; i < jucator.dimensiune; i++)
+		{
+            cout<<"# "<<jucator.carte[i].nume<<" #\n";
+		}
 
-    }while(1);
+        cout<<"\n\nDoriti sa mai jucati?\n";
+        cout<<"1)Da\n";
+        cout<<"2)Nu\n";
+
+
+        char p;
+        bool cont = false, oka = false;
+        while(!oka)
+        {
+            p = cin.get();
+            if(p == '2')
+            {
+                oka = true;
+            }
+            else if(p == '1')
+            {
+                oka = true;
+                cont = true;
+            }
+        }
+        if(!cont)
+            break;
+		//system("cls");
+	} while(1);
 }
 
 
-void afiseaza_despre_jucator(int i)
-{
-    cout<<"\n\nNume: "<<player[i].nume;
-    cout<<"\nSuma de bani: "<<player[i].bani;
-    cout<<"\nJocuri castigate: "<<player[i].jocuri_castigate;
-    cout<<"\nJocuri pierdute: "<<player[i].jocuri_pierdute;
-}
 
 
 int main()
@@ -380,7 +518,7 @@ int main()
                 jucatorNou(d-'0');
             }
 
-            ZaGame(true, d-'0');
+            StartBlackjack(true, d-'0');
         }
         else if(c == '2')
         {
@@ -433,7 +571,7 @@ int main()
                 jucatorNou(e-'0');
             }
 
-            ZaGame(true, d-'0', e-'0');
+            StartBlackjack(true, d-'0', e-'0');
         }
         else if(c == '3')
         {
