@@ -130,9 +130,13 @@ int aceiasi_carte(Carte a, Carte b) {
 	if (strcmp(a.nume, b.nume) == 0) return 1;
 	else return 0;
 }
+
 void cartea21 (Mana &p) {
 	do{
 		p.carte[p.dimensiune] = pachet.carte[--pachet.total];
+
+		if ((p.carte[p.dimensiune].valoare != 0) && (p.carte[p.dimensiune].valoare != 10))
+            break;
 	}while(1);
 
 	if (p.carte[p.dimensiune].valoare == 12)
@@ -140,6 +144,7 @@ void cartea21 (Mana &p) {
 
 	p.dimensiune++;
 }
+
 void numara21 (Mana &p) {
 	unsigned short int i;
 
@@ -156,9 +161,78 @@ void numara21 (Mana &p) {
 }
 
 
+void jucatorNou(int i)
+{
+    system("cls");
+
+    cout<<"Doriti sa adaugati un jucator nou.\n\n";
+    cout<<"Numele: ";
+
+    cin.getline(player[i].nume, 60);
+
+    while(strlen(player[i].nume) == 0)
+    {
+        cout<<"Numele: ";
+        cin.getline(player[i].nume, 60);
+    }
+
+    cout<<"Suma de bani: ";
+    cin>>player[i].bani;
+}
+
+void editeazaJucator(int i)
+{
+    system("cls");
+
+    cout<<"Doriti sa editati un jucator.\n\n";
+
+    char a;
+    while(1)
+    {
+        cout<<"Ce doriti sa editati?\n\n";
+        cout<<"1)Numele\n";
+        cout<<"2)Suma de bani\n";
+
+        cin>>a;
+
+        if(a == '1' || a == '2')
+            break;
+    }
+
+    if(a == '1')
+    {
+        cout<<"\nIntroduceti noul nume: ";
+        cin.getline(player[i].nume, 60);
+
+        while(strlen(player[i].nume))
+        {
+            cout<<"\nIntroduceti noul nume: ";
+            cin.getline(player[i].nume, 60);
+        }
+    }
+    if(a == '2')
+    {
+        cout<<"\nIntroduceti noua suma de bani: ";
+        cin>>player[i].bani;
+    }
+
+}
+
+void afiseaza_despre_jucator(int i)
+{
+    cout<<"\n\nNume: "<<player[i].nume;
+    cout<<"\nSuma de bani: "<<player[i].bani;
+    cout<<"\nJocuri castigate: "<<player[i].jocuri_castigate;
+    cout<<"\nJocuri pierdute: "<<player[i].jocuri_pierdute;
+}
+
+
 int main()
 {
     srand(time(0));
     CreiazaPachet();
     afiseaza_pachet();
+    jucatorNou(1);
+    editeazaJucator(1);
+    afiseaza_despre_jucator(1);
 }
